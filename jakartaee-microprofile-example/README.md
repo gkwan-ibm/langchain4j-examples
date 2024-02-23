@@ -64,7 +64,7 @@ Navigate to the the [OpenAPI UI](http://localhost:9080/openapi/ui) URL for the f
 - [HuggingFaceChatMode](https://github.com/langchain4j/langchain4j/blob/main/langchain4j-hugging-face/src/main/java/dev/langchain4j/model/huggingface/HuggingFaceChatModel.java)
   - expand the GET `/api/model/language` API
     1. Click the **Try it out** button.
-    2. Type `What are the most popular LLMs?`, or any question, in the question field. 
+    2. Type `Which are the most used Large Language Models`, or any question, in the question field.
     3. Click the **Execute** button.
   - Alternatively, run the following `curl` command from a command-line session:
     - ```

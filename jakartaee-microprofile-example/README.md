@@ -1,5 +1,5 @@
 # LangChain4j in Jakarta EE and MicroProfile
-This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta WebSocket, Jakarta CDI, Jakarta RESTful Web Services, MicroProfile Config, MicroProfile OpenAPI, and MicroProfile Metrics features.
+This example demonstrates LangChain4J in a Jakarta EE / MicroProfile application on Open Liberty. The application is a chatbot built with LangChain4J and uses Jakarta CDI, Jakarta RESTful Web Services, Jakarta WebSocket, MicroProfile Config, MicroProfile Metrics, and MicroProfile OpenAPI features.
 
 ## Prerequisites:
 

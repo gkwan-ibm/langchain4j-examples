@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static java.time.Duration.ofSeconds;
 import static java.util.Arrays.asList;
 
@@ -20,6 +21,7 @@ public class _08_AIServiceExamples {
 
     static ChatLanguageModel model = OpenAiChatModel.builder()
             .apiKey(ApiKeys.OPENAI_API_KEY)
+            .modelName(GPT_4_O_MINI)
             .timeout(ofSeconds(60))
             .build();
 
@@ -102,7 +104,7 @@ public class _08_AIServiceExamples {
     static class Sentiment_Extracting_AI_Service_Example {
 
         enum Sentiment {
-            POSITIVE, NEUTRAL, NEGATIVE;
+            POSITIVE, NEUTRAL, NEGATIVE
         }
 
         interface SentimentAnalyzer {
@@ -123,6 +125,59 @@ public class _08_AIServiceExamples {
 
             boolean positive = sentimentAnalyzer.isPositive("It is bad!");
             System.out.println(positive); // false
+        }
+    }
+
+    static class Hotel_Review_AI_Service_Example {
+
+        public enum IssueCategory {
+
+            @Description("The feedback mentions issues with the hotel's maintenance, such as air conditioning and plumbing problems")
+            MAINTENANCE_ISSUE,
+
+            @Description("The feedback mentions issues with the service provided, such as slow room service")
+            SERVICE_ISSUE,
+
+            @Description("The feedback mentions issues affecting the comfort of the stay, such as uncomfortable room conditions")
+            COMFORT_ISSUE,
+
+            @Description("The feedback mentions issues with hotel facilities, such as problems with the bathroom plumbing")
+            FACILITY_ISSUE,
+
+            @Description("The feedback mentions issues with the cleanliness of the hotel, such as dust and stains")
+            CLEANLINESS_ISSUE,
+
+            @Description("The feedback mentions issues with internet connectivity, such as unreliable Wi-Fi")
+            CONNECTIVITY_ISSUE,
+
+            @Description("The feedback mentions issues with the check-in process, such as it being tedious and time-consuming")
+            CHECK_IN_ISSUE,
+
+            @Description("The feedback mentions a general dissatisfaction with the overall hotel experience due to multiple issues")
+            OVERALL_EXPERIENCE_ISSUE
+        }
+
+        interface HotelReviewIssueAnalyzer {
+
+            @UserMessage("Please analyse the following review: |||{{it}}|||")
+            List<IssueCategory> analyzeReview(String review);
+        }
+
+        public static void main(String[] args) {
+
+            HotelReviewIssueAnalyzer hotelReviewIssueAnalyzer = AiServices.create(HotelReviewIssueAnalyzer.class, model);
+
+            String review = "Our stay at hotel was a mixed experience. The location was perfect, just a stone's throw away " +
+                    "from the beach, which made our daily outings very convenient. The rooms were spacious and well-decorated, " +
+                    "providing a comfortable and pleasant environment. However, we encountered several issues during our " +
+                    "stay. The air conditioning in our room was not functioning properly, making the nights quite uncomfortable. " +
+                    "Additionally, the room service was slow, and we had to call multiple times to get extra towels. Despite the " +
+                    "friendly staff and enjoyable breakfast buffet, these issues significantly impacted our stay.";
+
+            List<IssueCategory> issueCategories = hotelReviewIssueAnalyzer.analyzeReview(review);
+
+            // Should output [MAINTENANCE_ISSUE, SERVICE_ISSUE, COMFORT_ISSUE, OVERALL_EXPERIENCE_ISSUE]
+            System.out.println(issueCategories);
         }
     }
 
@@ -212,6 +267,7 @@ public class _08_AIServiceExamples {
 
         static class Person {
 
+            @Description("first name of a person") // you can add an optional description to help an LLM have a better understanding
             private String firstName;
             private String lastName;
             private LocalDate birthDate;
@@ -228,11 +284,23 @@ public class _08_AIServiceExamples {
 
         interface PersonExtractor {
 
-            @UserMessage("Extract information about a person from {{it}}")
+            @UserMessage("Extract a person from the following text: {{it}}")
             Person extractPersonFrom(String text);
         }
 
         public static void main(String[] args) {
+
+            ChatLanguageModel model = OpenAiChatModel.builder()
+                    .apiKey(ApiKeys.OPENAI_API_KEY)
+                    .modelName(GPT_4_O_MINI)
+                    // When extracting POJOs with the LLM that supports the "json mode" feature
+                    // (e.g., OpenAI, Azure OpenAI, Vertex AI Gemini, Ollama, etc.),
+                    // it is advisable to enable it (json mode) to get more reliable results.
+                    // When using this feature, LLM will be forced to output a valid JSON.
+                    .responseFormat("json_schema")
+                    .strictJsonSchema(true) // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-json-mode
+                    .timeout(ofSeconds(60))
+                    .build();
 
             PersonExtractor extractor = AiServices.create(PersonExtractor.class, model);
 
@@ -289,6 +357,18 @@ public class _08_AIServiceExamples {
         }
 
         public static void main(String[] args) {
+
+            ChatLanguageModel model = OpenAiChatModel.builder()
+                    .apiKey(ApiKeys.OPENAI_API_KEY)
+                    .modelName(GPT_4_O_MINI)
+                    // When extracting POJOs with the LLM that supports the "json mode" feature
+                    // (e.g., OpenAI, Azure OpenAI, Vertex AI Gemini, Ollama, etc.),
+                    // it is advisable to enable it (json mode) to get more reliable results.
+                    // When using this feature, LLM will be forced to output a valid JSON.
+                    .responseFormat("json_schema")
+                    .strictJsonSchema(true) // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-json-mode
+                    .timeout(ofSeconds(60))
+                    .build();
 
             Chef chef = AiServices.create(Chef.class, model);
 

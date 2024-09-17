@@ -6,9 +6,10 @@ import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.cohere.CohereScoringModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.bge.small.en.v15.BgeSmallEnV15QuantizedEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.scoring.ScoringModel;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
@@ -24,6 +25,7 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import shared.Assistant;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static shared.Utils.*;
 
 public class _03_Advanced_RAG_with_ReRanking_Example {
@@ -43,6 +45,8 @@ public class _03_Advanced_RAG_with_ReRanking_Example {
      * Providing irrelevant information to the LLM can be costly and, in the worst case, lead to hallucinations.
      * Therefore, in the second stage, we can perform re-ranking of the results obtained in the first stage
      * and eliminate irrelevant results using a more advanced model (e.g., Cohere Rerank).
+     * <p>
+     * This example requires "langchain4j-cohere" dependency.
      */
 
     public static void main(String[] args) {
@@ -78,7 +82,10 @@ public class _03_Advanced_RAG_with_ReRanking_Example {
 
         // To register and get a free API key for Cohere, please visit the following link:
         // https://dashboard.cohere.com/welcome/register
-        ScoringModel scoringModel = CohereScoringModel.withApiKey(System.getenv("COHERE_API_KEY"));
+        ScoringModel scoringModel = CohereScoringModel.builder()
+                .apiKey(System.getenv("COHERE_API_KEY"))
+                .modelName("rerank-multilingual-v3.0")
+                .build();
 
         ContentAggregator contentAggregator = ReRankingContentAggregator.builder()
                 .scoringModel(scoringModel)
@@ -90,8 +97,13 @@ public class _03_Advanced_RAG_with_ReRanking_Example {
                 .contentAggregator(contentAggregator)
                 .build();
 
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                .apiKey(OPENAI_API_KEY)
+                .modelName(GPT_4_O_MINI)
+                .build();
+
         return AiServices.builder(Assistant.class)
-                .chatLanguageModel(OpenAiChatModel.withApiKey(OPENAI_API_KEY))
+                .chatLanguageModel(model)
                 .retrievalAugmentor(retrievalAugmentor)
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();

@@ -8,7 +8,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.Tokenizer;
-import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 
 @SpringBootApplication
 public class CustomerSupportAgentApplication {
@@ -106,7 +107,7 @@ public class CustomerSupportAgentApplication {
         // 4. Convert segments into embeddings
         // 5. Store embeddings into embedding store
         // All this can be done manually, but we will use EmbeddingStoreIngestor to automate this:
-        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer("gpt-3.5-turbo"));
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer(GPT_4_O_MINI));
         EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                 .documentSplitter(documentSplitter)
                 .embeddingModel(embeddingModel)

@@ -4,7 +4,7 @@ import _2_naive.Naive_RAG_Example;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.bge.small.en.v15.BgeSmallEnV15QuantizedEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
@@ -23,6 +23,7 @@ import shared.Utils;
 import java.util.function.Function;
 
 import static dev.langchain4j.data.document.Metadata.metadata;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static dev.langchain4j.store.embedding.filter.MetadataFilterBuilder.metadataKey;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,6 +36,7 @@ class _05_Advanced_RAG_with_Metadata_Filtering_Examples {
 
     ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
             .apiKey(Utils.OPENAI_API_KEY)
+            .modelName(GPT_4_O_MINI)
             .build();
 
     EmbeddingModel embeddingModel = new BgeSmallEnV15QuantizedEmbeddingModel();

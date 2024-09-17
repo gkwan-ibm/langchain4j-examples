@@ -8,7 +8,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.bge.small.en.v15.BgeSmallEnV15QuantizedEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
@@ -23,6 +23,7 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import shared.Assistant;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static shared.Utils.*;
 
 public class _01_Advanced_RAG_with_Query_Compression_Example {
@@ -81,6 +82,7 @@ public class _01_Advanced_RAG_with_Query_Compression_Example {
 
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(OPENAI_API_KEY)
+                .modelName(GPT_4_O_MINI)
                 .build();
 
         // We will create a CompressingQueryTransformer, which is responsible for compressing

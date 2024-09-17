@@ -12,7 +12,7 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.bge.small.en.v15.BgeSmallEnV15QuantizedEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModel;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static shared.Utils.*;
@@ -88,6 +89,7 @@ public class _06_Advanced_RAG_Skip_Retrieval_Example {
 
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(OPENAI_API_KEY)
+                .modelName(GPT_4_O_MINI)
                 .build();
 
         // Let's create a query router.

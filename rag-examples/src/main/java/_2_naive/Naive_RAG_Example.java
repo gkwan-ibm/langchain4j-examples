@@ -11,7 +11,7 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.bge.small.en.v15.BgeSmallEnV15QuantizedEmbeddingModel;
+import dev.langchain4j.model.embedding.onnx.bgesmallenv15q.BgeSmallEnV15QuantizedEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
@@ -23,6 +23,7 @@ import shared.Assistant;
 import java.util.List;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import static shared.Utils.*;
 
 public class Naive_RAG_Example {
@@ -56,11 +57,11 @@ public class Naive_RAG_Example {
     private static Assistant createAssistant(String documentPath) {
 
         // First, let's create a chat model, also known as a LLM, which will answer our queries.
-        // In this example, we will use OpenAI's gpt-3.5-turbo, but you can choose any supported model.
+        // In this example, we will use OpenAI's gpt-4o-mini, but you can choose any supported model.
         // Langchain4j currently supports more than 10 popular LLM providers.
         ChatLanguageModel chatLanguageModel = OpenAiChatModel.builder()
                 .apiKey(OPENAI_API_KEY)
-                .modelName("gpt-3.5-turbo")
+                .modelName(GPT_4_O_MINI)
                 .build();
 
 
